@@ -16,7 +16,7 @@ CORS(app)
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 '''
-# db_drop_and_create_all()
+db_drop_and_create_all()
 
 ## ROUTES
 '''
@@ -27,7 +27,18 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks', methods=['GET'])
+def retrieve_all_drinks():
+	drinks_data = Drink.query.order_by(Drink.id).all()
+	drinks = [drink.short() for drink in drinks_data]
 
+	if len(drinks_data):
+		return jsonify({
+			'success': True,
+			'drinks': drinks
+		})
+	else:
+		abort(404)
 
 '''
 @TODO implement endpoint
@@ -37,7 +48,22 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks-detail', methods=['GET'])
+@requires_auth('get:drinks-detail')
+def retrieve_all_drinks_detail(jwt):
+	if jwt:
+		drinks_data = Drink.query.order_by(Drink.id).all()
+		drinks = [drink.long() for drink in drinks_data]
 
+		if len(drinks_data):
+			return jsonify({
+				'success': True,
+				'drinks': drinks
+			})
+		else:
+			abort(404)
+	else:
+		abort(401)
 
 '''
 @TODO implement endpoint
@@ -48,7 +74,28 @@ CORS(app)
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
+@app.route('/drinks', methods=['POST'])
+@requires_auth('post:drinks')
+def add_drink(jwt):
+	if jwt:
+		body = request.get_json()
 
+		new_title = body.get('title', None)
+		new_recipe = body.get('recipe', None)
+
+		try:
+			drink = Drink(title=new_title, recipe=new_recipe)
+			drink.insert()
+
+			return jsonify({
+				'success': True,
+				'drinks': [drink.long()],
+			})
+
+		except:
+			abort(422)
+	else:
+		abort(401)
 
 '''
 @TODO implement endpoint
