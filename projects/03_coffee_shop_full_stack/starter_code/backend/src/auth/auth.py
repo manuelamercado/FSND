@@ -168,6 +168,6 @@ def requires_auth(permission=''):
 
       check_permissions(permission, payload)
 
-      return f(payload, *args, **kargs)
+      return f(payload, *args, **kwargs)
     return wrapper
   return requires_auth_decorator
