@@ -40,11 +40,11 @@ class Actor(db.Model):
   gender = Column(String, nullable=False)
   movies = db.relationship('Movie', secondary=movies, backref=db.backref('actors'), lazy=True)
 
-  def __init__(self, name, age, gender, movie=''):
+  def __init__(self, name, age, gender, movie=[]):
     self.name = name
     self.age = age
     self.gender = gender
-    self.movies = movie
+    self.movies = movie 
 
   def format(self):
     movies_data = [movie.title for movie in self.movies]
@@ -78,9 +78,10 @@ class Movie(db.Model):
   title = Column(String, nullable=False)
   release_year = Column(DateTime, nullable=False)
 
-  def __init__(self, title, release_year):
+  def __init__(self, title, release_year, actors=[]):
     self.title = title
     self.release_year = release_year
+    self.actors = actors
 
   def format(self):
     actors_data = [actor.name for actor in self.actors]

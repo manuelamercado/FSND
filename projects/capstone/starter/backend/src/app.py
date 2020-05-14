@@ -1,12 +1,13 @@
 import os
 import sys
+import json
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 from flask_cors import CORS
 from flask_migrate import Migrate
 
-from database.models import db, setup_db, Actor, Movie, movies
+from database.models import db, setup_db, Actor, Movie
 from auth.auth import AuthError, requires_auth
 
 def create_app(test_config=None):
@@ -96,9 +97,11 @@ def create_app(test_config=None):
 
       try:
         actor = Actor(name=new_name, age=new_age, gender=new_gender)
+        movies = Movie.query.filter(Movie.id.in_(new_movies)).order_by(Movie.id).all()
 
-        for movie in new_movies:
-          actor.movies.append(Movie.query.get(movie))
+        if len(movies):
+          for movie in new_movies:
+            actor.movies.append(Movie.query.get(movie))
 
         actor.insert()
 
@@ -152,7 +155,7 @@ def create_app(test_config=None):
 
         return jsonify({
           'success': True,
-          'drinks': [actor.format()]
+          'actors': [actor.format()]
         })
 
       except:
@@ -232,6 +235,14 @@ def create_app(test_config=None):
       "success": False,
       "error": error.status_code,
       "message": error.error['description']
+      }), 401
+
+  @app.errorhandler(401)
+  def not_authorized(error):
+    return jsonify({
+      "success": False, 
+      "error": 401,
+      "message": "Not authorized"
       }), 401
 
   @app.errorhandler(403)
