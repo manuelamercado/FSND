@@ -47,11 +47,13 @@ class Actor(db.Model):
     self.movies = movie
 
   def format(self):
+    movies_data = [movie.title for movie in self.movies]
     return {
       'id': self.id,
       'name': self.name,
       'age': self.age,
-      'gender': self.gender}
+      'gender': self.gender,
+      'movies': movies_data}
 
   def insert(self):
     db.session.add(self)
@@ -81,10 +83,12 @@ class Movie(db.Model):
     self.release_year = release_year
 
   def format(self):
+    actors_data = [actor.name for actor in self.actors]
     return {
       'id': self.id,
       'title': self.title,
-      'release_year': self.release_year}
+      'release_year': self.release_year,
+      'actors': actors_data}
 
   def insert(self):
     db.session.add(self)

@@ -1,4 +1,5 @@
 import os
+import sys
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
@@ -30,41 +31,21 @@ def create_app(test_config=None):
   '''
   GET /actors
     it should be an endpoint accesible for all roles
+    it should require the 'get:actors' permission
   returns status code 200 and json {"success": True, "actors": actors} where actors is the list of actors
     or appropriate status code indicating reason for failure
   '''
   @app.route('/actors', methods=['GET'])
-  def retrieve_all_actors():
-    actors_data = Drink.query.order_by(Actor.id).all()
-    actors = [actor.format() for actor in actorss_data]
-
-    if len(actors_data):
-      return jsonify({
-        'success': True,
-        'drinks': actors
-      })
-    else:
-      abort(404)
-
-  '''
-  @TODO implement endpoint
-      GET /drinks-detail
-          it should require the 'get:drinks-detail' permission
-          it should contain the drink.long() data representation
-      returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
-          or appropriate status code indicating reason for failure
-  '''
-  @app.route('/drinks-detail', methods=['GET'])
-  @requires_auth('get:drinks-detail')
-  def retrieve_all_drinks_detail(jwt):
+  @requires_auth('get:actors')
+  def retrieve_all_actors(jwt):
     if jwt:
-      drinks_data = Drink.query.order_by(Drink.id).all()
-      drinks = [drink.long() for drink in drinks_data]
+      actors_data = Actor.query.order_by(Actor.id).all()
+      actors = [actor.format() for actor in actors_data]
 
-      if len(drinks_data):
+      if len(actors_data):
         return jsonify({
           'success': True,
-          'drinks': drinks
+          'actors': actors
         })
       else:
         abort(404)
@@ -72,30 +53,58 @@ def create_app(test_config=None):
       abort(401)
 
   '''
-  @TODO implement endpoint
-      POST /drinks
-          it should create a new row in the drinks table
-          it should require the 'post:drinks' permission
-          it should contain the drink.long() data representation
-      returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
-          or appropriate status code indicating reason for failure
+  GET /movies
+    it should be an endpoint accesible for all roles
+    it should require the 'get:movies' permission
+  returns status code 200 and json {"success": True, "movies": movies} where movies is the list of movies
+    or appropriate status code indicating reason for failure
   '''
-  @app.route('/drinks', methods=['POST'])
-  @requires_auth('post:drinks')
-  def add_drink(jwt):
+  @app.route('/movies', methods=['GET'])
+  @requires_auth('get:movies')
+  def retrieve_all_movies(jwt):
+    if jwt:
+      movies_data = Movie.query.order_by(Movie.id).all()
+      movies = [movie.format() for movie in movies_data]
+
+      if len(movies_data):
+        return jsonify({
+          'success': True,
+          'movies': movies
+        })
+      else:
+        abort(404)
+    else:
+      abort(401)
+
+  '''
+  POST /actors
+    it should create a new row in the actors table
+    it should require the 'post:actors' permission
+  returns status code 200 and json {"success": True, "actors": actor} where actor is an array containing only the newly created actor
+    or appropriate status code indicating reason for failure
+  '''
+  @app.route('/actors', methods=['POST'])
+  @requires_auth('post:actors')
+  def add_actor(jwt):
     if jwt:
       body = request.get_json()
 
-      new_title = body.get('title', None)
-      new_recipe = body.get('recipe', None)
+      new_name = body.get('name', None)
+      new_age = body.get('age', None)
+      new_gender = body.get('gender', None)
+      new_movies = body.get('movies', None)
 
       try:
-        drink = Drink(title=new_title, recipe=json.dumps(new_recipe))
-        drink.insert()
+        actor = Actor(name=new_name, age=new_age, gender=new_gender)
+
+        for movie in new_movies:
+          actor.movies.append(Movie.query.get(movie))
+
+        actor.insert()
 
         return jsonify({
           'success': True,
-          'drinks': [drink.long()],
+          'actors': [actor.format()],
         })
 
       except:
@@ -105,38 +114,45 @@ def create_app(test_config=None):
       abort(401)
 
   '''
-  @TODO implement endpoint
-      PATCH /drinks/<id>
-          where <id> is the existing model id
-          it should respond with a 404 error if <id> is not found
-          it should update the corresponding row for <id>
-          it should require the 'patch:drinks' permission
-          it should contain the drink.long() data representation
-      returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
-          or appropriate status code indicating reason for failure
+  PATCH /actors/<id>
+    where <id> is the existing model id
+    it should respond with a 404 error if <id> is not found
+    it should update the corresponding row for <id>
+    it should require the 'patch:actors' permission
+  returns status code 200 and json {"success": True, "actors": actor} where actor is an array containing only the updated actor
+    or appropriate status code indicating reason for failure
   '''
-  @app.route('/drinks/<int:drink_id>', methods=['PATCH'])
-  @requires_auth('patch:drinks')
-  def update_drink(jwt, drink_id):
+  @app.route('/actors/<int:actor_id>', methods=['PATCH'])
+  @requires_auth('patch:actors')
+  def update_actor(jwt, actor_id):
     if jwt:
       body = request.get_json()
 
       try:
-        drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
-        if drink is None:
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
+        if actor is None:
           abort(404)
 
-        if 'title' in body:
-          drink.title = body.get('title', None)
+        if 'name' in body:
+          actor.name = body.get('name', None)
         
-        if 'recipe' in body:
-          drink.recipe = json.dumps(body.get('recipe', None))
+        if 'age' in body:
+          actor.age = body.get('age', None)
+
+        if 'gender' in body:
+          actor.gender = body.get('gender', None)
+
+        if 'movies' in body:
+          movies = body.get('movies', None)
+
+          for movie in movies:
+            actor.movies.append(Movie.query.get(movie))
         
-        drink.update()
+        actor.update()
 
         return jsonify({
           'success': True,
-          'drinks': [drink.long()]
+          'drinks': [actor.format()]
         })
 
       except:
@@ -146,30 +162,29 @@ def create_app(test_config=None):
       abort(401)
 
   '''
-  @TODO implement endpoint
-      DELETE /drinks/<id>
-          where <id> is the existing model id
-          it should respond with a 404 error if <id> is not found
-          it should delete the corresponding row for <id>
-          it should require the 'delete:drinks' permission
-      returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
-          or appropriate status code indicating reason for failure
+  DELETE /actors/<id>
+    where <id> is the existing model id
+    it should respond with a 404 error if <id> is not found
+    it should delete the corresponding row for <id>
+    it should require the 'delete:actors' permission
+  returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
+    or appropriate status code indicating reason for failure
   '''
-  @app.route('/drinks/<int:drink_id>', methods=['DELETE'])
-  @requires_auth('delete:drinks')
-  def delete_drink(jwt, drink_id):
+  @app.route('/actors/<int:actor_id>', methods=['DELETE'])
+  @requires_auth('delete:actors')
+  def delete_actor(jwt, actor_id):
     if jwt:
       try:
-        drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
+        actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
 
-        if drink is None:
+        if actor is None:
           abort(404)
 
-        drink.delete()
+        actor.delete()
 
         return jsonify({
           'success': True,
-          'delete': drink.id
+          'delete': actor.id
         })
 
       except:
@@ -180,26 +195,16 @@ def create_app(test_config=None):
 
   ## Error Handling
   '''
-  Example error handling for unprocessable entity
+  Error handling for unprocessable entity
   '''
   @app.errorhandler(422)
   def unprocessable(error):
-      return jsonify({
-                      "success": False, 
-                      "error": 422,
-                      "message": "unprocessable"
-                      }), 422
+    return jsonify({
+      "success": False, 
+      "error": 422,
+      "message": "unprocessable"
+      }), 422
 
-  '''
-  @TODO implement error handlers using the @app.errorhandler(error) decorator
-      each error handler should return (with approprate messages):
-              jsonify({
-                      "success": False, 
-                      "error": 404,
-                      "message": "resource not found"
-                      }), 404
-
-  '''
   @app.errorhandler(400)
   def bad_request(error):
     return jsonify({
@@ -208,8 +213,7 @@ def create_app(test_config=None):
       "message": "Bad request"
       }), 400
   '''
-  @TODO implement error handler for 404
-      error handler should conform to general task above 
+  Error handler for 404
   '''
   @app.errorhandler(404)
   def not_found(error):
@@ -220,8 +224,7 @@ def create_app(test_config=None):
       }), 404
 
   '''
-  @TODO implement error handler for AuthError
-      error handler should conform to general task above 
+  Error handler for AuthError
   '''
   @app.errorhandler(AuthError)
   def authorization_error(error):
