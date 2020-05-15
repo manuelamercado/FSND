@@ -43,6 +43,15 @@ This will install all of the required packages we selected within the `requireme
 * Upgrade (apply) changes `flask db upgrade`
 * Downgrade changes `flask db downgrade`
 
+OR:
+
+* Use the `manage.py` file:
+```
+python manage.py db init
+python manage.py db migrate
+python manage.py db upgrade
+```
+
 ## Running the server
 
 From within the `./src` directory first ensure you are working using your created virtual environment.
