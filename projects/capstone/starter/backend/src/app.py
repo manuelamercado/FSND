@@ -27,13 +27,13 @@ def create_app(test_config=None):
   ## ROUTES
   @app.route('/')
   def index():
-    return "This is the default index of Casting Agency Api Project."
+    return 'This is the default index of Casting Agency Api Project.'
 
   '''
   GET /actors
     it should be an endpoint accesible for all roles
     it should require the 'get:actors' permission
-  returns status code 200 and json {"success": True, "actors": actors} where actors is the list of actors
+  returns status code 200 and json {'success': True, 'actors': actors} where actors is the list of actors
     or appropriate status code indicating reason for failure
   '''
   @app.route('/actors', methods=['GET'])
@@ -57,7 +57,7 @@ def create_app(test_config=None):
   GET /movies
     it should be an endpoint accesible for all roles
     it should require the 'get:movies' permission
-  returns status code 200 and json {"success": True, "movies": movies} where movies is the list of movies
+  returns status code 200 and json {'success': True, 'movies': movies} where movies is the list of movies
     or appropriate status code indicating reason for failure
   '''
   @app.route('/movies', methods=['GET'])
@@ -81,7 +81,7 @@ def create_app(test_config=None):
   POST /actors
     it should create a new row in the actors table
     it should require the 'post:actors' permission
-  returns status code 200 and json {"success": True, "actors": actor} where actor is an array containing only the newly created actor
+  returns status code 200 and json {'success': True, 'actors': actor} where actor is an array containing only the newly created actor
     or appropriate status code indicating reason for failure
   '''
   @app.route('/actors', methods=['POST'])
@@ -120,7 +120,7 @@ def create_app(test_config=None):
   POST /movies
     it should create a new row in the movies table
     it should require the 'post:movies' permission
-  returns status code 200 and json {"success": True, "movies": movie} where movie is an array containing only the newly created movie
+  returns status code 200 and json {'success': True, 'movies': movie} where movie is an array containing only the newly created movie
     or appropriate status code indicating reason for failure
   '''
   @app.route('/movies', methods=['POST'])
@@ -160,7 +160,7 @@ def create_app(test_config=None):
     it should respond with a 404 error if <id> is not found
     it should update the corresponding row for <id>
     it should require the 'patch:actors' permission
-  returns status code 200 and json {"success": True, "actors": actor} where actor is an array containing only the updated actor
+  returns status code 200 and json {'success': True, 'actors': actor} where actor is an array containing only the updated actor
     or appropriate status code indicating reason for failure
   '''
   @app.route('/actors/<int:actor_id>', methods=['PATCH'])
@@ -209,7 +209,7 @@ def create_app(test_config=None):
       it should respond with a 404 error if <id> is not found
       it should update the corresponding row for <id>
       it should require the 'patch:movies' permission
-    returns status code 200 and json {"success": True, "movies": movie} where movie is an array containing only the updated movie
+    returns status code 200 and json {'success': True, 'movies': movie} where movie is an array containing only the updated movie
       or appropriate status code indicating reason for failure
   '''
   @app.route('/movies/<int:movie_id>', methods=['PATCH'])
@@ -255,7 +255,7 @@ def create_app(test_config=None):
     it should respond with a 404 error if <id> is not found
     it should delete the corresponding row for <id>
     it should require the 'delete:actors' permission
-  returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
+  returns status code 200 and json {'success': True, 'delete': id} where id is the id of the deleted record
     or appropriate status code indicating reason for failure
   '''
   @app.route('/actors/<int:actor_id>', methods=['DELETE'])
@@ -286,7 +286,7 @@ def create_app(test_config=None):
     it should respond with a 404 error if <id> is not found
     it should delete the corresponding row for <id>
     it should require the 'delete:movies' permission
-  returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
+  returns status code 200 and json {'success': True, 'delete': id} where id is the id of the deleted record
     or appropriate status code indicating reason for failure
   '''
   @app.route('/movies/<int:movie_id>', methods=['DELETE'])
@@ -318,17 +318,17 @@ def create_app(test_config=None):
   @app.errorhandler(422)
   def unprocessable(error):
     return jsonify({
-      "success": False, 
-      "error": 422,
-      "message": "unprocessable"
+      'success': False, 
+      'error': 422,
+      'message': 'Unprocessable'
       }), 422
 
   @app.errorhandler(400)
   def bad_request(error):
     return jsonify({
-      "success": False, 
-      "error": 400,
-      "message": "Bad request"
+      'success': False, 
+      'error': 400,
+      'message': 'Bad request'
       }), 400
   '''
   Error handler for 404
@@ -336,9 +336,9 @@ def create_app(test_config=None):
   @app.errorhandler(404)
   def not_found(error):
     return jsonify({
-      "success": False, 
-      "error": 404,
-      "message": "Not found"
+      'success': False, 
+      'error': 404,
+      'message': 'Not found'
       }), 404
 
   '''
@@ -347,33 +347,41 @@ def create_app(test_config=None):
   @app.errorhandler(AuthError)
   def authorization_error(error):
     return jsonify({
-      "success": False,
-      "error": error.status_code,
-      "message": error.error['description']
+      'success': False,
+      'error': error.status_code,
+      'message': error.error['description']
       }), 401
 
   @app.errorhandler(401)
   def not_authorized(error):
     return jsonify({
-      "success": False, 
-      "error": 401,
-      "message": "Not authorized"
+      'success': False, 
+      'error': 401,
+      'message': 'Not authorized'
       }), 401
 
   @app.errorhandler(403)
   def not_found_permission(error):
     return jsonify({
-      "success": False, 
-      "error": 403,
-      "message": "Do not have permissions"
+      'success': False, 
+      'error': 403,
+      'message': 'Do not have permissions'
       }), 403
+
+  @app.errorhandler(405)
+  def method_not_allowed(error):
+    return jsonify({
+      'success': False, 
+      'error': 405,
+      'message': 'Method not allowed'
+      }), 405
 
   @app.errorhandler(500)
   def server_error(error):
     return jsonify({
-      "success": False, 
-      "error": 500,
-      "message": "Server error"
+      'success': False, 
+      'error': 500,
+      'message': 'Server error'
       }), 500
 
   return app

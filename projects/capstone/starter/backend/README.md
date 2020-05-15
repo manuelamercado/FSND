@@ -1,4 +1,4 @@
-# Coffee Shop Backend
+# Casptone Agency Backend
 
 ## Getting Started
 
@@ -30,6 +30,19 @@ This will install all of the required packages we selected within the `requireme
 
 - [jose](https://python-jose.readthedocs.io/en/latest/) JavaScript Object Signing and Encryption for JWTs. Useful for encoding, decoding, and verifying JWTS.
 
+- [psql](https://www.postgresql.org/download/) The core of the PostgreSQL object-relational database management system is available in several source and binary formats. The project uses commands of the cli.
+
+### Setting up the databases:
+* Create a database named 'capstone' using `createdb capstone`. You can pass the user if you want. Modify the database URI that is in `setup.sh`.
+* Go to `starter` folder: `cd starter`.
+* Run `source setup.sh` to get the environment variables available.
+
+#### Migrations:
+* Create the initial migrations configuration: `flask db init`.
+* Detects migrations to run `flask db migrate`
+* Upgrade (apply) changes `flask db upgrade`
+* Downgrade changes `flask db downgrade`
+
 ## Running the server
 
 From within the `./src` directory first ensure you are working using your created virtual environment.
@@ -48,9 +61,7 @@ flask run --reload
 
 The `--reload` flag will detect file changes and restart the server automatically.
 
-## Tasks
-
-### Setup Auth0
+## Setup Auth0
 
 1. Create a new Auth0 Account
 2. Select a unique tenant domain
@@ -60,49 +71,32 @@ The `--reload` flag will detect file changes and restart the server automaticall
         - Enable RBAC
         - Enable Add Permissions in the Access Token
 5. Create new API permissions:
-    - `get:drinks-detail`
-    - `post:drinks`
-    - `patch:drinks`
-    - `delete:drinks`
+    - `get:actors`
+    - `post:actors`
+    - `patch:actors`
+    - `delete:actors`
+    - `get:movies`
+    - `post:movies`
+    - `patch:movies`
+    - `delete:movies`
 6. Create new roles for:
-    - Barista
-        - can `get:drinks-detail`
-    - Manager
-        - can perform all actions
+    - Casting Assistant
+        - Can view actors and movies
+    - Casting Director
+        - All permissions a Casting Assistant has and…
+        - Add or delete an actor from the database
+        - Modify actors or movies
+    - Executive Producer
+        - All permissions a Casting Director has and…
+        - Add or delete a movie from the database
 7. Test your endpoints with [Postman](https://getpostman.com). 
-    - Register 2 users - assign the Barista role to one and Manager role to the other.
+    - Register 3 users - assign the Casting Assistant role to one, another as Casting Director, and Executive Producer role to the other.
     - Sign into each account and make note of the JWT.
     - Import the postman collection `./starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json`
-    - Right-clicking the collection folder for barista and manager, navigate to the authorization tab, and including the JWT in the token field (you should have noted these JWTs).
+    - Right-clicking the collection folder for each role, navigate to the authorization tab, and including the JWT in the token field (you should have noted these JWTs).
     - Run the collection and correct any errors.
     - Export the collection overwriting the one we've included so that we have your proper JWTs during review!
+8. Set up your configuration variables in `setup.sh`.
 
-### Implement The Server
-
-There are `@TODO` comments throughout the `./backend/src`. We recommend tackling the files in order and from top to bottom:
-
-1. `./src/auth/auth.py`
-2. `./src/api.py`
-
-# How to set up:
-* Create a database named 'capstone' using `createdb capstone`. You can pass the user if you want. Modify the database URI that is in `setup.sh`.
-* Go to `starter` folder: `cd starter`.
-* Run `source setup.sh` to get the environment variables available.
-
-## Installing Requirements:
-* Is recomendable to set up a virtual environment. You can do it with the following commands:
-```
-python3 -m venv env
-source env/bin/activate
-```
-* Install dependencies running `pip3 install -r requirements.txt`
-* Deactivate the virtual environment just running `deactivate`.
-  
-## Migrations:
-* Create the initial migrations configuration: `flask db init`.
-* Detects migrations to run `flask db migrate`
-* Upgrade (apply) changes `flask db upgrade`
-* Downgrade changes `flask db downgrade`
-
-## Auth0:
-* Set up your configuration variables in `setup.sh`.
+## Tests:
+* Create a database for testing with the following command ` createdb capstone_test postgres`.

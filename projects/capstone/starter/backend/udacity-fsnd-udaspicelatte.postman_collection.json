@@ -348,8 +348,8 @@
 							"script": {
 								"id": "168041b9-5563-43ed-946e-8f81f4601625",
 								"exec": [
-									"pm.test(\"Status code is 403\", function () {",
-									"    pm.response.to.have.status(403);",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -379,8 +379,8 @@
 							"script": {
 								"id": "efb10067-7765-450b-9a12-abb204b85d1a",
 								"exec": [
-									"pm.test(\"Status code is 403\", function () {",
-									"    pm.response.to.have.status(403);",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -410,8 +410,8 @@
 							"script": {
 								"id": "40cbe8d0-59b1-4eeb-a712-7e9a092ce469",
 								"exec": [
-									"pm.test(\"Status code is 403\", function () {",
-									"    pm.response.to.have.status(403);",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -442,8 +442,8 @@
 							"script": {
 								"id": "174c50bf-1dcc-41eb-8911-d908c04ec21d",
 								"exec": [
-									"pm.test(\"Status code is 403\", function () {",
-									"    pm.response.to.have.status(403);",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -474,8 +474,8 @@
 							"script": {
 								"id": "834c5364-3236-419d-8353-38f1d563782d",
 								"exec": [
-									"pm.test(\"Status code is 403\", function () {",
-									"    pm.response.to.have.status(403);",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -506,8 +506,8 @@
 							"script": {
 								"id": "63041a3e-9a1a-4e4d-b943-43ec412b4fa1",
 								"exec": [
-									"pm.test(\"Status code is 403\", function () {",
-									"    pm.response.to.have.status(403);",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -690,8 +690,8 @@
 							"script": {
 								"id": "f7f097f1-838f-40c2-8894-061556fb818f",
 								"exec": [
-									"pm.test(\"Status code is 403\", function () {",
-									"    pm.response.to.have.status(403);",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -860,8 +860,8 @@
 							"script": {
 								"id": "6820d2a4-90ed-49a8-9e33-ea01e47d2c99",
 								"exec": [
-									"pm.test(\"Status code is 403\", function () {",
-									"    pm.response.to.have.status(403);",
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1244,7 +1244,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlB1NWRPM2pGekRMUHk2aVdROXZ3bSJ9.eyJpc3MiOiJodHRwczovL2Rldi02ejdodHRtNi5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWViYzYzNTg3YmI4NjQwYzZmNjIxMjdjIiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1ODk0NjQzOTYsImV4cCI6MTU4OTU1MDc5NiwiYXpwIjoiY01KNlg1SUVobmR6YjVDRUM1V295VHhZZlc0UVF1b0YiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJkZWxldGU6bW92aWVzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6bW92aWVzIl19.WZgZapdDV6163bBiqR2G-Mha0eqCcwpWofld4TsehdvqF4UD9e2Fs_zs_iRAE6U8woZYa8pqMT88g3WsruZ1e0C-wHurlSQQWtd9HE1Nk1YLhNQfsc5SldXB_JTWen2K0x_mVLpP4VrVnB9kFK77LXi5umJBF-1mAbPK-TLLLcTErow2TepqCriW5NmRReN40KpcYf-AG_nuMNmy6QY-GeKA9lejBzrEwtUj_cT-vg1xFFR03qHPTjeG06vxQwbh8nM-S-GUgvLf_x5NarcqnufLulJoZqO_ZigWZa7YG1HbAdl6zyac0bG_Sjf0hVTS3ADkkICy8MEC8EGl6eKTkg",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlB1NWRPM2pGekRMUHk2aVdROXZ3bSJ9.eyJpc3MiOiJodHRwczovL2Rldi02ejdodHRtNi5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWViYzYzNTg3YmI4NjQwYzZmNjIxMjdjIiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1ODk1NTQ1MzUsImV4cCI6MTU4OTY0MDkzNSwiYXpwIjoiY01KNlg1SUVobmR6YjVDRUM1V295VHhZZlc0UVF1b0YiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJkZWxldGU6bW92aWVzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6bW92aWVzIl19.FSr8JRQjVtgXhNQn7vM1EO2Txb3L8zqNQdfY3PPiWnYFlE8zuBNwq-_m32itqM72LG4pwVfw-7wock1WA4d58m1giMrEDaCqKS_JlxF2drjKT9gesDz9kwTmp62S8k5sFYu4yfV_iS4dqbrrSa3x7-dln3ukvTs0_1yyEQ7VWpkUkt9U7UpGmYUK9L33rvxIGSaGHcm2YIAdsRatPcoHL0KBlS1_jUp-o9IohEzmWfPogmWwOhqJn1brXX1y5srDO0jzs5QLFKeBYRF6bgbw36wm9FGGMHJvLNohpCWSjULuoGo0LB1FRRY9AVouhxktItQG4VS2GUv-nwb1uAPUBg",
 						"type": "string"
 					}
 				]
@@ -1298,7 +1298,7 @@
 	],
 	"variable": [
 		{
-			"id": "1b080df0-e72f-4a57-b594-45b5f97a9347",
+			"id": "cc5c5b9b-cae9-4f36-8a3f-d4929f6c4884",
 			"key": "host",
 			"value": "localhost:8100",
 			"type": "string"
