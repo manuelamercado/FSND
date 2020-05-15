@@ -100,7 +100,7 @@ def create_app(test_config=None):
         movies = Movie.query.filter(Movie.id.in_(new_movies)).order_by(Movie.id).all()
 
         if len(movies):
-          for movie in new_movies:
+          for movie in movies:
             actor.movies.append(Movie.query.get(movie))
 
         actor.insert()
@@ -108,6 +108,44 @@ def create_app(test_config=None):
         return jsonify({
           'success': True,
           'actors': [actor.format()],
+        })
+
+      except:
+        print(sys.exc_info())
+        abort(422)
+    else:
+      abort(401)
+
+  '''
+  POST /movies
+    it should create a new row in the movies table
+    it should require the 'post:movies' permission
+  returns status code 200 and json {"success": True, "movies": movie} where movie is an array containing only the newly created movie
+    or appropriate status code indicating reason for failure
+  '''
+  @app.route('/movies', methods=['POST'])
+  @requires_auth('post:movies')
+  def add_movie(jwt):
+    if jwt:
+      body = request.get_json()
+
+      new_title = body.get('title', None)
+      new_release_year = body.get('release_year', None)
+      new_actors = body.get('actors', None)
+
+      try:
+        movie = Movie(title=new_title, release_year=new_release_year)
+        actors = Actor.query.filter(Actor.id.in_(new_actors)).order_by(Actor.id).all()
+
+        if len(actors):
+          for actor in actors:
+            movie.actors.append(actor)
+
+        movie.insert()
+
+        return jsonify({
+          'success': True,
+          'movies': [movie.format()],
         })
 
       except:
@@ -146,16 +184,63 @@ def create_app(test_config=None):
           actor.gender = body.get('gender', None)
 
         if 'movies' in body:
-          movies = body.get('movies', None)
+          new_movies = body.get('movies', None)
+          movies = Movie.query.filter(Movie.id.in_(new_movies)).order_by(Movie.id).all()
 
           for movie in movies:
-            actor.movies.append(Movie.query.get(movie))
+            actor.movies.append(movie)
         
         actor.update()
 
         return jsonify({
           'success': True,
           'actors': [actor.format()]
+        })
+
+      except:
+        print(sys.exc_info())
+        abort(400)
+    else:
+      abort(401)
+
+  '''
+    PATCH /movies/<id>
+      where <id> is the existing model id
+      it should respond with a 404 error if <id> is not found
+      it should update the corresponding row for <id>
+      it should require the 'patch:movies' permission
+    returns status code 200 and json {"success": True, "movies": movie} where movie is an array containing only the updated movie
+      or appropriate status code indicating reason for failure
+  '''
+  @app.route('/movies/<int:movie_id>', methods=['PATCH'])
+  @requires_auth('patch:movies')
+  def update_movie(jwt, movie_id):
+    if jwt:
+      body = request.get_json()
+
+      try:
+        movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+        if movie is None:
+          abort(404)
+
+        if 'title' in body:
+          movie.title = body.get('title', None)
+        
+        if 'release_year' in body:
+          movie.release_year = body.get('release_year', None)
+
+        if 'actors' in body:
+          new_actors = body.get('actors', None)
+          actors = Actor.query.filter(Actor.id.in_(new_actors)).order_by(Actor.id).all()
+
+          for actor in actors:
+            movie.actors.append(actor)
+        
+        movie.update()
+
+        return jsonify({
+          'success': True,
+          'movies': [movie.format()]
         })
 
       except:
@@ -195,6 +280,36 @@ def create_app(test_config=None):
     else:
       abort(401)
 
+  '''
+  DELETE /movies/<id>
+    where <id> is the existing model id
+    it should respond with a 404 error if <id> is not found
+    it should delete the corresponding row for <id>
+    it should require the 'delete:movies' permission
+  returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
+    or appropriate status code indicating reason for failure
+  '''
+  @app.route('/movies/<int:movie_id>', methods=['DELETE'])
+  @requires_auth('delete:movies')
+  def delete_movie(jwt, movie_id):
+    if jwt:
+      try:
+        movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
+
+        if movie is None:
+          abort(404)
+
+        movie.delete()
+
+        return jsonify({
+          'success': True,
+          'delete': movie.id
+        })
+
+      except:
+        abort(422)
+    else:
+      abort(401)
 
   ## Error Handling
   '''
