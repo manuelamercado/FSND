@@ -7,8 +7,8 @@ from sqlalchemy import exc
 from flask_cors import CORS
 from flask_migrate import Migrate
 
-from database.models import db, setup_db, Actor, Movie
-from auth.auth import AuthError, requires_auth
+from models import db, setup_db, Actor, Movie
+from auth import AuthError, requires_auth
 
 def create_app(test_config=None):
   # create and configure the app
