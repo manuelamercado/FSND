@@ -98,5 +98,185 @@ The `--reload` flag will detect file changes and restart the server automaticall
     - Export the collection overwriting the one we've included so that we have your proper JWTs during review!
 8. Set up your configuration variables in `setup.sh`.
 
+## Endpoints
+
+### GET '/actors'
+- Fetches a dictionary of actors in which the keys are the fields of the Actor model and the values are the corresponding string of the fields.
+- Request Arguments: None
+- Request Headers: Token with the corresponding permission.
+- Returns: An object with keys, Actor model fields.
+```
+{
+  "actors": [
+    {
+      "age": 25,
+      "gender": "F",
+      "id": 2,
+      "movies": [
+          "Manuela Mercado"
+      ],
+      "name": "Manuela Mercado"
+   },
+   ...
+  ],
+  "success": true
+}
+```
+
+### GET '/movies'
+- Fetches a dictionary of movies in which the keys are the fields of the Movie model and the values are the corresponding string of the fields.
+- Request Arguments: None
+- Request Headers: Token with the corresponding permission.
+- Returns: An object with keys, Movie model fields.
+```
+{
+  "movies": [
+    {
+      "actors": [
+          "Manuela Mercado"
+      ],
+      "id": 3,
+      "release_year": "Fri, 15 May 2020 00:00:00 GMT",
+      "title": "Manuela Mercado"
+    },
+    ...
+  ],
+  "success": true
+}
+```
+
+### DELETE '/actors/<int:actor_id>'
+- Deletes a specific actor.
+- Request Arguments: Actor ID.
+- Request Headers: Token with the corresponding permission.
+- Returns: The deleted actor ID.
+```
+{
+  "delete": <actor_id>,
+  "success": true,
+}
+```
+
+### DELETE '/movies/<int:movie_id>'
+- Deletes a specific movie.
+- Request Arguments: Movie ID.
+- Request Headers: Token with the corresponding permission.
+- Returns: The deleted movie ID.
+```
+{
+  "delete": <movie_id>,
+  "success": true,
+}
+```
+
+### POST '/actors' to create a new actor 
+- Creates a new actor.
+- Request Arguments: A JSON object with the key:values of the Actor model fields.
+```
+{
+  "name": "Manuela Mercado",
+  "age": "25",
+  "gender": "F",
+  "movies": [1]
+}
+```
+- Request Headers: Token with the corresponding permission.
+- Returns the created actor formatted.
+```
+{ 
+  "actors": [
+    { 
+      "name": "Manuela Mercado",
+      "age": "25",
+      "gender": "F",
+      "movies": [
+        "Manuela Mercado"
+      ],
+    }
+  ],
+  "success": true  
+}
+```
+
+### POST '/movies' to create a new movie 
+- Creates a new movie.
+- Request Arguments: A JSON object with the key:values of the Movie model fields.
+```
+{
+  "title": "Manuela Mercado",
+  "release_year": "Fri, 15 May 2020 00:00:00 GMT",
+  "actors": [1]
+}
+```
+- Request Headers: Token with the corresponding permission.
+- Returns the created movie formatted.
+```
+{ 
+  "movies": [
+    {
+      "actors": [
+        "Manuela Mercado"
+      ],
+      "title": "Manuela Mercado",
+      "release_year": "Fri, 15 May 2020 00:00:00 GMT"
+    }
+  ],
+  "success": true  
+}
+```
+
+### PATCH '/actors' to create a update an actor 
+- Update a new actor.
+- Request Arguments: A JSON object with the key:values of the Actor model fields to update.
+```
+{
+  "name": "Manuela Jacqueline"
+}
+```
+- Request Headers: Token with the corresponding permission.
+- Returns the updated actor formatted.
+```
+{ 
+  "actors": [
+    { 
+      "name": "Manuela Jacqueline",
+      "age": "25",
+      "gender": "F",
+      "movies": [
+        "Manuela Mercado"
+      ],
+    }
+  ],
+  "success": true  
+}
+```
+
+### PATCH '/movies' to update a new movie 
+- Updates a new movie.
+- Request Arguments: A JSON object with the key:values of the Movie model fields to update.
+```
+{
+  "title": "Manuela Jacqueline"
+}
+```
+- Request Headers: Token with the corresponding permission.
+- Returns the updated movie formatted.
+```
+{ 
+  "movies": [
+    {
+      "actors": [
+        "Manuela Mercado"
+      ],
+      "title": "Manuela Jacqueline",
+      "release_year": "Fri, 15 May 2020 00:00:00 GMT"
+    }
+  ],
+  "success": true  
+}
+```
+
 ## Tests:
 * Create a database for testing with the following command ` createdb capstone_test postgres`.
+* Insert at least 3 values for actors and movies.
+* Run the tests with `python3 test_app.py` in the `src` folder.
